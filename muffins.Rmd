@@ -1,0 +1,78 @@
+---
+title: "Untitled"
+author: "Antoneely Calizaya"
+date: "28/04/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Tutorial 2
+
+
+```{r}
+library(tidyverse)
+library(tidymodels)
+library(janitor)
+library(dplyr)
+bird1 <- read.csv("https://raw.githubusercontent.com/acalizaya/BCO6008/main/birds.csv")
+
+View(bird1)
+sex<-bird1$sex
+curlen<-bird1$curlen
+sexcode<-ifelse(sex=="F", 1, 0)
+plot(curlen, jitter(sexcode, 0.15), pch=19, xlab="Bill length(mm)", ylab = "sex(0 - male, 1 - female)")
+model <- glm(sexcode~curlen, binomial())
+xv<-seq(min(curlen), max(curlen), 0.01)
+yv<-predict(model, list(curlen=xv), type="response")
+lines(xv, yv, col="green"))
+
+
+
+```
+```{r}
+muffin_cupcake<-read_csv("https://raw.githubusercontent.com/adashofdata/muffin-cupcake/master/recipes_muffins_cupcakes.csv")
+
+muffin_cupcake_clean<-muffin_cupcake%>%
+  clean_names()
+
+#count the types - cupcake is 10 and muffin = 10. This is called balanced dataset.
+muffin_cupcake_clean%>%count(type)
+
+# Splitting the cleaned dataset into training vs test datasets - internal structure
+muffin_cupcake_split<-initial_split(muffin_cupcake_clean)
+
+muffin_cupcake_split
+```
+```{r}
+muffin_cupcake_training<-training(muffin_cupcake_split)
+muffin_cupcake_testing<-testing(muffin_cupcake_split)
+
+muffin_recipe<-recipe(type~flour+milk+sugar+egg, data = muffin_cupcake_training)
+muffin_recipe
+```
+```{r}
+muffin_recipe_steps<-muffin_recipe%>%
+  step_meanimpute(all_numeric())%>%
+  step_center(all_numeric())%>%
+  step_scale(all_numeric())
+
+muffin_recipe_steps
+```
+```{r}
+prepped_recipe<-prep(muffin_recipe_steps, training = muffin_cupcake_training)
+prepped_recipe
+```
+```{r}
+muffin_train_preprocessed<-bake(prepped_recipe, muffin_cupcake_training)
+
+muffin_testing_preprocessed<-bake(prepped_recipe, muffin_cupcake_testing)
+```
+
+
+
+
+
+

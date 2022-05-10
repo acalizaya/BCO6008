@@ -1,0 +1,49 @@
+---
+title: "age"
+author: "Antoneely Calizaya"
+date: "10/05/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+install.packages("readxl")
+install.packages("MASS")
+install.packages("ISLR")
+library(readxl)
+library(tidyverse)
+library(MASS)
+library(ISLR)
+```
+
+```{r}
+age <- read_excel("age.xls", sheet = "Hoja2")
+```
+
+```{r}
+lmheight=lm(height~age, data=age)
+summary(lmheight)
+```
+```{r}
+pressure<- read_excel("pressure.xlsx")
+lmTemp=lm(Pressure~Temperature, data=pressure)
+plot(pressure, pch=16, col="blue")
+abline(lmTemp)
+```
+```{r}
+summary(lmTemp)
+```
+```{r}
+item<- read_excel("item.xlsx")
+lmTemp1=lm(id~cost, data=item)
+summary(lmTemp1)
+
+abline(lmTemp1)
+```
+```{r}
+plot(item, pch=16, col="blue")
+```
+
+
+
+
